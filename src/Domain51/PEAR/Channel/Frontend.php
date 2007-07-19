@@ -99,16 +99,38 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
      */
     protected function _getPackageLatestReleases($pkg)
     {
+        $release = array();
         $package = DB_DataObject::factory('releases');
         $states = array('snapshot', 'devel', 'alpha', 'beta', 'stable');
         foreach ($states as $state) {
             //            $package->query("SELECT version, UNIX_TIMESTAMP(releasedate) AS epoch, DATE_FORMAT(releasedate, '%M %D %Y') AS date,  MAX(releasedate) FROM releases WHERE package='$pkg' AND channel='{$this->_channel}' AND state='$state' GROUP BY package");
-            $package->query("SELECT version, UNIX_TIMESTAMP( releasedate )  AS epoch, DATE_FORMAT( releasedate,  '%M %D %Y'  )  AS date, MAX( releasedate )  FROM releases WHERE package='$pkg' AND channel='{$this->_channel}' AND state='$state' GROUP  BY releasedate ORDER  BY releasedate DESC  LIMIT 1");
+            $package->query("
+                SELECT
+                    version,
+                    UNIX_TIMESTAMP( releasedate )  AS epoch,
+                    DATE_FORMAT( releasedate,  '%M %D %Y'  )  AS date,
+                    MAX( releasedate )
+                FROM
+                    releases
+                WHERE
+                    package='$pkg'
+                    AND channel='{$this->_channel}'
+                    AND state='$state'
+                GROUP  BY
+                    releasedate
+                ORDER  BY
+                    releasedate DESC
+                LIMIT 1
+            ");
             while ($package->fetch()) {
                 $release[$state] = array('version' => $package->version, 'date' => $package->date, 'epoch' => $package->epoch);
             }
         }
-
+        
+        if (count($release) == 0) {
+            return array();
+        }
+        
         if (sizeof($release) == 1) {
             return $release;
         }
