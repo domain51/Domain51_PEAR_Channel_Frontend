@@ -112,50 +112,37 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
     {
         $release = array();
         $package = DB_DataObject::factory('releases');
-        $states = array('snapshot', 'devel', 'alpha', 'beta', 'stable');
-        foreach ($states as $state) {
-            $package->query("
-                SELECT
-                    version,
-                    UNIX_TIMESTAMP( releasedate )  AS epoch,
-                    DATE_FORMAT( releasedate,  '%M %D %Y'  )  AS date,
-                    MAX( releasedate )
-                FROM
-                    releases
-                WHERE
-                    package='$pkg'
-                    AND channel='{$this->_channel}'
-                    AND state='$state'
-                GROUP  BY
-                    releasedate
-                ORDER  BY
-                    releasedate DESC
-                LIMIT 1
-            ");
-            while ($package->fetch()) {
-                $release[$state] = array('version' => $package->version, 'date' => $package->date, 'epoch' => $package->epoch);
-            }
-        }
+        $escaped_package = $package->escape($pkg);
         
-        if (count($release) == 0) {
-            return array();
-        }
+        $query = "
+            SELECT
+                state,
+                version,
+                DATE_FORMAT(releasedate, '%M %D %Y') AS date
+            FROM
+                releases
+                INNER JOIN (
+                    SELECT
+                        version
+                    FROM
+                        releases
+                    WHERE
+                        package = '{$escaped_package}'
+                    ORDER BY
+                        releasedate
+                    LIMIT 1
+                ) AS derived USING(version)
+            WHERE
+                package = '{$escaped_package}'
+        ";
+        $package->query($query);
         
-        if (sizeof($release) == 1) {
-            return $release;
+        
+        $latest_releases = array();
+        while ($package->fetch()) {
+            $latest_releases[$package->state] = $package->toArray();
         }
-
-        $states = array_keys($release);
-
-
-        for ($i = 0; $i < sizeof($states); $i++) {
-            if (isset($states[$i+1]) && $release[$states[$i]]['epoch'] < $release[$states[$i+1]]['epoch']) {
-                unset($release[$states[$i+1]]);
-            }
-        }
-
-
-        return array_reverse($release);
+        return $latest_releases;
     }
     
     protected function _newView($template)
