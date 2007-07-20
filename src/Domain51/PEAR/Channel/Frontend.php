@@ -58,7 +58,7 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
         
         
         if (isset($_REQUEST['downloads'])) {
-            $view->content = $this->generateDownloads();
+            $view->downloads = $this->generateDownloads();
         } else {
             $view->description = $pkg['description'];
             $view->summary = $pkg['summary'];
@@ -74,6 +74,17 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
         }
         
         echo $view;
+    }
+    
+    /**
+     * Temporary fix
+     */
+    public function generateDownloads()
+    {
+        ob_start();
+        $this->showPackageDownloads();
+        $buffer = ob_get_clean();
+        return $buffer . "</table>";
     }
     
     protected function _generatePackageExtras()
