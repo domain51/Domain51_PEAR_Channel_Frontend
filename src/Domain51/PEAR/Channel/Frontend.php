@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Crtx/PEAR/Channel/Frontend.php';
-require_once 'Domain51/View.php';
+require_once 'Domain51/Template.php';
 
 class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
 {
@@ -114,7 +114,6 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
         $package = DB_DataObject::factory('releases');
         $states = array('snapshot', 'devel', 'alpha', 'beta', 'stable');
         foreach ($states as $state) {
-            //            $package->query("SELECT version, UNIX_TIMESTAMP(releasedate) AS epoch, DATE_FORMAT(releasedate, '%M %D %Y') AS date,  MAX(releasedate) FROM releases WHERE package='$pkg' AND channel='{$this->_channel}' AND state='$state' GROUP BY package");
             $package->query("
                 SELECT
                     version,
@@ -162,9 +161,9 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
     protected function _newView($template)
     {
         if (file_exists("{$this->_custom_template_path}/{$template}.tpl.php")) {
-            return new Domain51_View("{$this->_custom_template_path}/{$template}.tpl.php");
+            return new Domain51_Template("{$this->_custom_template_path}/{$template}.tpl.php");
         } else {
-            return new Domain51_View("{$this->_template_path}/{$template}.tpl.php");
+            return new Domain51_Template("{$this->_template_path}/{$template}.tpl.php");
         }
     }
 }
