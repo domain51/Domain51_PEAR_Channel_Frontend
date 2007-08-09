@@ -2,6 +2,7 @@
 
 require_once 'Crtx/PEAR/Channel/Frontend.php';
 require_once 'Domain51/Template.php';
+require_once 'Domain51/PEAR/Channel/Package.php';
 
 class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
 {
@@ -38,18 +39,18 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
      */
     public function showPackage()
     {
-        $pkg = $this->packageInfo($_GET['package']);
+        $pkg = new Domain51_PEAR_Channel_Package($_GET['package'], $this->_channel);
+        if (!$pkg->isValid()) {
+            echo '<strong>No Package to display</strong>';
+            return;
+        }
+        
         $subpkg = DB_DataObject::factory('packages');
         $subpkg->channel = $this->_channel;
         $subpkg->parent = $_GET['package'];
 
         $has_sub = $subpkg->find(false);
 
-        if (!$pkg) {
-            echo '<strong>No Package to display</strong>';
-            return;
-        }
-        
         $view = $this->_newView('package');
         $view->index = $this->_config['index'];
         $view->channel = $this->_config['channel'];
