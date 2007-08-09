@@ -13,6 +13,7 @@ require '_setup.inc';
 
 $release = new Domain51_PEAR_Channel_Release($pdo, '1');
 assert('(string)$release->package == "Example_Package"');
+assert('(string)$release->channel == "pear.example.com"');
 
 ?>
 ===DONE===
