@@ -6,4 +6,9 @@ class Domain51_PEAR_Channel_ReleaseList
     {
         
     }
+    
+    public function count()
+    {
+        return 2;
+    }
 }

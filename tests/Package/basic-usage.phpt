@@ -22,6 +22,10 @@ require '_setup.inc';
 $package = new Domain51_PEAR_Channel_Package($pdo, 'Example_Package');
 assert('$package->package == "Example_Package"');
 assert('$package->license == "LGPL"');
+
+assert('$package->releases instanceof Domain51_PEAR_Channel_ReleaseList');
+assert('$package->releases->count() == 2');
+
 ?>
 ===DONE===
 --EXPECT--

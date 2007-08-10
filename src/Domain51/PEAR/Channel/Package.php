@@ -27,7 +27,13 @@ class Domain51_PEAR_Channel_Package
     
     public function __get($key)
     {
-        return $this->_data[$key];
+        switch ($key) {
+            case 'releases' :
+                return new Domain51_PEAR_Channel_ReleaseList($this);
+            
+            default:
+                return $this->_data[$key];
+        }
     }
 }
 
