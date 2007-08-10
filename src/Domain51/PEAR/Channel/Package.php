@@ -2,53 +2,34 @@
 
 class Domain51_PEAR_Channel_Package
 {
-    private $_data = null;
+    private $_data = array();
     
-    public function __construct($package, $channel)
+    public function __construct($pdo, $criteria)
     {
-        $package = DB_DataObject::factory('packages');
-        $package->package = $package;
-        $package->channel = $channel;
-        if ($package->find(true)) {
-            $this->_data = false;
-        } else {
-            $this->_data = $package->toArray();
+        if (!is_array($criteria)) {
+            $criteria = array('package' => $criteria);
         }
+        $this->_init($pdo, $criteria);
     }
     
-    public function isValid()
-    {
-        return $this->_data !== false;
+    private function _init(PDO $pdo, array $criteria) {
+        $where = array();
+        $final_criteria = array();
+        foreach ($criteria as $column => $value) {
+            $where[] = "{$column} = :{$column}";
+            $final_critera[":{$column}"] = $value;
+        }
+        $query = "SELECT * FROM packages WHERE " . implode(' AND ', $where);
+        $statement = $pdo->prepare($query);
+        $statement->execute($final_critera);
+        $this->_data = $statement->fetch(PDO::FETCH_ASSOC);
     }
     
     public function __get($key)
     {
-        // if we already know this value, return it
-        if (isset($this->_data[$key])) {
-            return $this->_data[$key];
-        }
-        
-        switch ($key) {    
-            case 'category' :
-                return $this->_initCategory();
-            
-            case 'releases' :
-                return $this->_initReleases();
-        }
-    }
-    
-    private function _initCategory()
-    {
-        $category = DB_DataObject::factory('categories');
-        $category->channel = $this->channel;
-        $category->id = $this->category_id;
-        $this->_data['category'] = $category->find(true) ? $category->name : 'Default';
-        return $this->_data['category'];
-    }
-    
-    private function _initReleases()
-    {
-        $this->_data['releases'] = new Domain51_PEAR_Channel_ReleaseList($this);
-        return $this->_data['releases'];
+        return $this->_data[$key];
     }
 }
+
+class Domain51_PEAR_Channel_Package_NotFoundException extends PEAR_Exception { }
+class Domain51_PEAR_Channel_Package_UnrecoverableException extends PEAR_Exception { }

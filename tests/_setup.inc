@@ -112,5 +112,14 @@ $pdo->exec("
             'A useful summary',
             'A more full description',
             0
+        ),
+        (
+            'pear.example.net',
+            'Example_Package_Alternative',
+            'LGPL',
+            'http://uri',
+            'Should be a summary',
+            'Should be a full description',
+            0
         )
 ");
