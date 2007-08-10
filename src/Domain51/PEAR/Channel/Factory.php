@@ -2,17 +2,17 @@
 
 class Domain51_PEAR_Channel_Factory
 {
-    private $_pdo = null;
+    private $_config = null;
     
-    public function __construct(PDO $pdo)
+    public function __construct($config)
     {
-        $this->_pdo = $pdo;
+        $this->_config = $config;
     }
     
     public function loadReleaseByVersion($name, $version)
     {
         return new Domain51_PEAR_Channel_Release(
-            $this->_pdo,
+            $this->_config,
             array(
                 'package' => (string)$name,
                 'version' => $version,

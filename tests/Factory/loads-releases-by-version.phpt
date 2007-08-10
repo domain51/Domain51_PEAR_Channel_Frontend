@@ -12,7 +12,7 @@ set_include_path(
 
 require '_setup.inc';
 
-$factory = new Domain51_PEAR_Channel_Factory($pdo);
+$factory = new Domain51_PEAR_Channel_Factory($config);
 $release = $factory->loadReleaseByVersion('Example_Package', '0.1');
 
 assert('$release instanceof Domain51_PEAR_Channel_Release');

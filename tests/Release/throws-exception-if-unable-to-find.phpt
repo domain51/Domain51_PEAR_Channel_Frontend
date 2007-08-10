@@ -14,7 +14,7 @@ set_include_path(
 require '_setup.inc';
 
 try {
-    new Domain51_PEAR_Channel_Release($pdo, 'unknown-and-unknowable');
+    new Domain51_PEAR_Channel_Release($config, 'unknown-and-unknowable');
     trigger_error('exception not caught');
 } catch (Domain51_PEAR_Channel_Release_NotFoundException $e) {
     assert('$e->getMessage() == "unable to locate release"');

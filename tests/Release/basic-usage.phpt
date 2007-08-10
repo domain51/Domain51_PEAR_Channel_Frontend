@@ -11,7 +11,7 @@ set_include_path(
 
 require '_setup.inc';
 
-$release = new Domain51_PEAR_Channel_Release($pdo, '1');
+$release = new Domain51_PEAR_Channel_Release($config, '1');
 assert('(string)$release->package == "Example_Package"');
 assert('(string)$release->channel == "pear.example.com"');
 

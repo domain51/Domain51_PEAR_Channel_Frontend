@@ -20,7 +20,7 @@ $array = array(
     '_RAW_VALUES' => true
 );
 
-$release = new Domain51_PEAR_Channel_Release($pdo, $array);
+$release = new Domain51_PEAR_Channel_Release($config, $array);
 assert('(string)$release->package == "Vendor_Example"');
 assert('(string)$release->channel == "pear.example.org"');
 

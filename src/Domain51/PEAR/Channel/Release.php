@@ -4,7 +4,7 @@ class Domain51_PEAR_Channel_Release
 {
     private $_data = array();
     
-    public function __construct(PDO $pdo, $criteria)
+    public function __construct(Domain51_PEAR_Channel_Config $config, $criteria)
     {
         if (!is_array($criteria)) {
             $criteria = array('id' => $criteria);
@@ -12,7 +12,7 @@ class Domain51_PEAR_Channel_Release
         if (isset($criteria['_RAW_VALUES'])) {
             $this->_data = $criteria;
         } else {
-            $this->_init($pdo, $criteria);
+            $this->_init($config->pdo, $criteria);
         }
     }
     

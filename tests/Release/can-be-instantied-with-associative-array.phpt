@@ -14,7 +14,7 @@ set_include_path(
 require '_setup.inc';
 
 $release = new Domain51_PEAR_Channel_Release(
-    $pdo,
+    $config,
     array(
         'package' => 'Example_Package',
         'version' => '0.2'
@@ -27,7 +27,7 @@ assert('(string)$release->version == "0.2"');
 unset($release);
 
 $release = new Domain51_PEAR_Channel_Release(
-    $pdo,
+    $config,
     array(
         'package' => 'Example_Package',
         'version' => '0.1',

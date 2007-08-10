@@ -16,7 +16,7 @@ require '_setup.inc';
 try {
     $column = 'unknown_' . rand(1, 20);
     new Domain51_PEAR_Channel_Release(
-        $pdo,
+        $config,
         array($column => 123)
     );
     trigger_error('exception not caught');
