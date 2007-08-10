@@ -9,7 +9,11 @@ class Domain51_PEAR_Channel_Release
         if (!is_array($criteria)) {
             $criteria = array('id' => $criteria);
         }
-        $this->_init($pdo, $criteria);
+        if (isset($criteria['_RAW_VALUES'])) {
+            $this->_data = $criteria;
+        } else {
+            $this->_init($pdo, $criteria);
+        }
     }
     
     private function _init(PDO $pdo, array $criteria) {
