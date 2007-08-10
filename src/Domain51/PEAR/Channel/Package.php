@@ -2,14 +2,20 @@
 
 class Domain51_PEAR_Channel_Package
 {
+    private $_config = null;
     private $_data = array();
     
-    public function __construct($pdo, $criteria)
+    public function __construct(Domain51_PEAR_Channel_Config $config, $criteria)
     {
+        $this->_config = $config;
         if (!is_array($criteria)) {
             $criteria = array('package' => $criteria);
         }
-        $this->_init($pdo, $criteria);
+        if (!isset($criteria['channel'])) {
+            $criteria['channel'] = $config->channel;
+        }
+        
+        $this->_init($config->pdo, $criteria);
     }
     
     private function _init(PDO $pdo, array $criteria) {
@@ -23,17 +29,36 @@ class Domain51_PEAR_Channel_Package
         $statement = $pdo->prepare($query);
         $statement->execute($final_critera);
         $this->_data = $statement->fetch(PDO::FETCH_ASSOC);
+        if ($this->_data === false) {
+            $error = $statement->errorInfo();
+            if (count($error) > 1) {
+                throw new Domain51_PEAR_Channel_Package_UnrecoverableException(
+                    'problem with query',
+                    $error
+                );
+            }
+            
+            throw new Domain51_PEAR_Channel_Package_NotFoundException(
+                'unable to find matching package',
+                $criteria
+            );
+        }
     }
     
     public function __get($key)
     {
         switch ($key) {
             case 'releases' :
-                return new Domain51_PEAR_Channel_ReleaseList($this);
+                return new Domain51_PEAR_Channel_ReleaseList($this->_config, $this);
             
             default:
                 return $this->_data[$key];
         }
+    }
+    
+    public function __toString()
+    {
+        return $this->package;
     }
 }
 

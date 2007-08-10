@@ -13,18 +13,22 @@ set_include_path(
 
 require '_setup.inc';
 
-// psuedo code
-//$config = new Domain51_PEAR_Channel_Config(array(
-//    'pdo' => $pdo,
-//    'channel' => 'pear.example.com',
-//));
-
-$package = new Domain51_PEAR_Channel_Package($pdo, 'Example_Package');
+$package = new Domain51_PEAR_Channel_Package($config, 'Example_Package');
 assert('$package->package == "Example_Package"');
 assert('$package->license == "LGPL"');
+assert('(string)$package->channel == "pear.example.com"');
 
 assert('$package->releases instanceof Domain51_PEAR_Channel_ReleaseList');
-assert('$package->releases->count() == 2');
+assert('$package->releases->count() >= 3');
+
+$alt_config = new Domain51_PEAR_Channel_Config(array(
+    'pdo' => $pdo,
+    'channel' => 'pear.example.net',
+));
+$package =new Domain51_PEAR_Channel_Package($alt_config, 'Example_Package');
+assert('$package->package == "Example_Package"');
+assert('$package->license == "Non-LGPL"');
+assert('(string)$package->channel == "pear.example.net"');
 
 ?>
 ===DONE===

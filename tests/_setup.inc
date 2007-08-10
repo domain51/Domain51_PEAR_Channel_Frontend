@@ -4,6 +4,11 @@ require 'Domain51/Loader.php';
 
 $database_name = 'test_pear_channel';
 $pdo = new PDO('mysql://root:@', 'root', '');
+$config = new Domain51_PEAR_Channel_Config(array(
+    'pdo' => $pdo,
+    'channel' => 'pear.example.com',
+));
+
 $pdo->exec("DROP DATABASE IF EXISTS $database_name");
 $pdo->exec("CREATE DATABASE {$database_name}");
 $pdo->exec("USE {$database_name}");
@@ -80,6 +85,22 @@ $pdo->exec("
             '/path/to/release/Example_Package-0.2beta.tgz',
             '',
             ''
+        ),
+        (
+            3,
+            'pear.example.com',
+            'Example_Package',
+            '0.2.1',
+            'alpha',
+            'lead-dev',
+            'LGPL',
+            'A useful summary',
+            'A more full description',
+            NOW() - (60 * 60 * 24 * 7 * 4),
+            'Third release, second alpha',
+            '/path/to/release/Example_Package-0.2.1beta.tgz',
+            '',
+            ''
         )
 ");
 
@@ -120,6 +141,15 @@ $pdo->exec("
             'http://uri',
             'Should be a summary',
             'Should be a full description',
+            0
+        ),
+        (
+            'pear.example.net',
+            'Example_Package',
+            'Non-LGPL',
+            'http://uri',
+            'A useful summary of a conflicting package name on a different channel',
+            'A more full description of said package',
             0
         )
 ");
