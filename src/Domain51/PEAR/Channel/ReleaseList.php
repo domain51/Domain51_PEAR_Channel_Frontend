@@ -24,21 +24,24 @@ class Domain51_PEAR_Channel_ReleaseList
     
     public function filter($type)
     {
-        $this->_data = array();
-        switch ($type) {
-            case 'latest' :
-                foreach($this->_raw_data as $release) {
-                    if (!isset($this->_data[$release['state']])) {
-                        $this->_data[$release['state']] = $release;
-                        continue;
-                    }
-                    
-                    // one exists, see if this version is newer and replace if it is
-                    if ($this->_data[$release['state']]['version'] < $release['version']) {
-                        $this->_data[$release['state']] = $release;
-                    }
-                }
-                break;
+        $filter_method = "_filter_{$type}";
+        $this->_data = $this->$filter_method($this->_raw_data);
+    }
+    
+    protected function _filter_latest(array $raw_data)
+    {
+        $array = array();
+        foreach($raw_data as $release) {
+            if (!isset($array[$release['state']])) {
+                $array[$release['state']] = $release;
+                continue;
+            }
+            
+            // one exists, see if this version is newer and replace if it is
+            if ($array[$release['state']]['version'] < $release['version']) {
+                $array[$release['state']] = $release;
+            }
         }
+        return $array;
     }
 }
