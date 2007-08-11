@@ -9,6 +9,7 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
     private $_template_path = '';
     private $_custom_template_path = '';
     private $_config = array();
+    private $_config_object = null;
     
     /**
      * Intercept some values from Crtx_PEAR_Channel_Frontend since they're private
@@ -21,6 +22,10 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
         $this->_config['channel'] = $channel;
         
         $this->_template_path = dirname(__FILE__) . '/templates';
+        $this->_config_object = new Domain51_PEAR_Channel_Config(array(
+            'pdo' => new PDO($config['database']),
+            'channel' => $channel,
+        ));
     }
     
     public function __set($key, $value)
@@ -35,16 +40,36 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
     /**
      * Show a Packages page
      *
+     * @internal This method is currently all pseudo code.  There are still chunks
+     *           of code to be implemented.
      * @return void
      */
     public function showPackage()
     {
-        $pkg = new Domain51_PEAR_Channel_Package($_GET['package'], $this->_channel);
-        if (!$pkg->isValid()) {
-            echo '<strong>No Package to display</strong>';
+        try {
+            $pkg = new Domain51_PEAR_Channel_Package($this->_config_object, $_GET['package']);
+            
+            // pseudo code
+            $pkg->registerExtras(new Domain51_PEAR_Channel_Package_Extras($pkg));
+            // end pc
+            
+            $view = $this->_newView('package');
+            $view->index = $this->_config['index'];
+            $view->package = $pkg;
+            $view->show_download = isset($_REQUEST['downloads']);
+            echo $view;
+            return;
+        } catch (Domain51_PEAR_Channel_Package_NotFoundException $e) {
+            // todo: use template
+            echo "<strong>No package available</strong>";
+            return;
+        } catch (Domain51_PEAR_Channel_Package_UnrecoverableException $e) {
+            // todo: use template
+            echo "<strong>Unrecoverable exception thrown, please contact channel administrator</strong>";
             return;
         }
         
+        // old code to be removed
         $subpkg = DB_DataObject::factory('packages');
         $subpkg->channel = $this->_channel;
         $subpkg->parent = $_GET['package'];
