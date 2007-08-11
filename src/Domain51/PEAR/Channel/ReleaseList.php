@@ -55,8 +55,14 @@ class Domain51_PEAR_Channel_ReleaseList implements Iterator
     
     public function filter($type)
     {
+        $args = func_get_args();
+        array_shift($args);
+        array_unshift($args, $this->_raw_data);
         $filter_method = "_filter_{$type}";
-        $this->_data = $this->$filter_method($this->_raw_data);
+        $this->_data = call_user_func_array(
+            array($this, $filter_method),
+            $args
+        );
     }
     
     protected function _filter_latest(array $raw_data)
@@ -72,6 +78,19 @@ class Domain51_PEAR_Channel_ReleaseList implements Iterator
             if ($array[$release['state']]['version'] < $release['version']) {
                 $array[$release['state']] = $release;
             }
+        }
+        return $array;
+    }
+    
+    protected function _filter_state(array $raw_data, $state)
+    {
+        $array = array();
+        foreach ($raw_data as $release) {
+            if ($release['state'] != $state) {
+                continue;
+            }
+            
+            $array[] = $release;
         }
         return $array;
     }
