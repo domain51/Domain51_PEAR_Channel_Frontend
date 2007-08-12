@@ -153,3 +153,13 @@ $pdo->exec("
             0
         )
 ");
+
+// add in package with parents and children
+$pdo->exec("
+    INSERT INTO packages
+        (channel, package, parent)
+    VALUES
+        ('pear.example.com', 'Example_Parent_Package', 0),
+        ('pear.example.com', 'Example_Child_Package_One', 'Example_Parent_Package'),
+        ('pear.example.com', 'Example_Child_Package_Two', 'Example_Parent_Package')
+");
