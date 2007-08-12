@@ -1,0 +1,26 @@
+* [DONE] Add ability to find children packages
+* Add ability to find parent packages
+* Add ability to find package's maintainers
+    * Add maintainer model
+    * Add maintainer list object
+* Add D_P_C_Package::registerExtension(D_P_C_PackageExtension $extension) to provide a uniform
+  method for handling extensions to the basic packages (possibly add to all base models).
+  Extensions will specify properties that they answer to, and model will delegate retrieving
+  that information to the extension.  This will fit Davey Shafik's Crtx_PEAR_Channel_Frontend's
+  "extras" into this model while still allowing further customization and extension by future
+  developers.  API for Domain51_PEAR_Channel_PackageExtension:
+    interface Domain51_PEAR_Channel_PackageExtension {
+        /**
+         * @return array
+         */
+        public function declaredProperties();
+    }
+* [???] Consider ability to auto discover extensions so they can just be installed without
+  having to modify the code-base to register themselves.
+
+
+Phase Two
+---------
+* Refactor existing Domain51_PEAR_Channel_Frontend to utilize new models
+* Refactor existing Crtx_PEAR_Channel_Frontend displays to utilize new models and the
+  Domain51_PEAR_Channel_Frontend MVC-style architecture.
