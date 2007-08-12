@@ -1,5 +1,5 @@
 * [DONE] Add ability to find children packages
-* Add ability to find parent packages
+* [DONE] Add ability to find parent packages
 * Add ability to find package's maintainers
     * Add maintainer model
     * Add maintainer list object
