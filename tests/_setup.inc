@@ -163,3 +163,24 @@ $pdo->exec("
         ('pear.example.com', 'Example_Child_Package_One', 'Example_Parent_Package'),
         ('pear.example.com', 'Example_Child_Package_Two', 'Example_Parent_Package')
 ");
+
+
+// add in maintainers
+$pdo->exec("
+    CREATE TABLE `maintainers` (
+        `handle` varchar(20) NOT NULL default '',
+        `channel` varchar(255) NOT NULL default '',
+        `package` varchar(80) NOT NULL default '',
+        `role` varchar(30) NOT NULL default 'lead',
+        `active` tinyint(4) NOT NULL default '1',
+        PRIMARY KEY  (`handle`,`channel`(100),`package`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+");
+
+$pdo->exec("
+    INSERT INTO maintainers
+        (handle, channel, package, role, active)
+    VALUES
+        ('lead-dev', 'pear.example.com', 'Example_Package', 'lead', 1),
+        ('inactive-lead-dev', 'pear.example.com', 'Example_Package', 'lead', 0)
+");
