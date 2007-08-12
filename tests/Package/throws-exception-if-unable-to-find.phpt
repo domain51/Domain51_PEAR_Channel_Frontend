@@ -17,7 +17,7 @@ try {
     new Domain51_PEAR_Channel_Package($config, 'UnknownPackage');
     trigger_error('exception not caught');
 } catch (Domain51_PEAR_Channel_Package_NotFoundException $e) {
-    assert('$e->getMessage() == "unable to find matching package"');
+    assert('$e->getMessage() == "unable to locate package"');
     $expected = array(
         'package' => 'UnknownPackage',
         'channel' => 'pear.example.com',

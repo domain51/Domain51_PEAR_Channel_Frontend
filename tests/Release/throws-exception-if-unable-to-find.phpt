@@ -18,7 +18,7 @@ try {
     trigger_error('exception not caught');
 } catch (Domain51_PEAR_Channel_Release_NotFoundException $e) {
     assert('$e->getMessage() == "unable to locate release"');
-    assert('$e->getCause() == array("id" => "unknown-and-unknowable")');
+    assert('$e->getCause() == array("id" => "unknown-and-unknowable", "channel" => "pear.example.com")');
 }
 
 ?>
