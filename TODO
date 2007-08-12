@@ -1,7 +1,7 @@
 * [DONE] Add ability to find children packages
 * [DONE] Add ability to find parent packages
 * Add ability to find package's maintainers
-    * Add maintainer model
+    * [DONE] Add maintainer model
     * Add maintainer list object
 * Add D_P_C_Package::registerExtension(D_P_C_PackageExtension $extension) to provide a uniform
   method for handling extensions to the basic packages (possibly add to all base models).
