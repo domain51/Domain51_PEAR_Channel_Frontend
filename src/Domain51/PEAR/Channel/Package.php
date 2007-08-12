@@ -15,7 +15,11 @@ class Domain51_PEAR_Channel_Package
             $criteria['channel'] = $config->channel;
         }
         
-        $this->_init($config->pdo, $criteria);
+        if (isset($criteria['_RAW_VALUES'])) {
+            $this->_data = $criteria;
+        } else {
+            $this->_init($config->pdo, $criteria);
+        }
     }
     
     private function _init(PDO $pdo, array $criteria) {
@@ -45,6 +49,9 @@ class Domain51_PEAR_Channel_Package
         }
     }
     
+    /**
+     * @todo add caching to all pseudo-properties
+     */
     public function __get($key)
     {
         switch ($key) {
