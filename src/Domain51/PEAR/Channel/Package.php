@@ -71,6 +71,16 @@ class Domain51_PEAR_Channel_Package
                     array('parent' => (string)$this->package)
                 );
             
+            case 'parentPackage' :
+                try {
+                    return new Domain51_PEAR_Channel_Package(
+                        $this->_config,
+                        $this->parent
+                    );
+                } catch (Domain51_PEAR_Channel_Package_NotFoundException $e) {
+                    return false;
+                }
+            
             default:
                 return $this->_data[$key];
         }
