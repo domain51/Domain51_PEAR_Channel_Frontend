@@ -16,4 +16,9 @@ class Domain51_PEAR_Channel_Handle extends Domain51_PEAR_Channel_AbstractDBModel
     {
         return parent::__get($key);
     }
+    
+    public function __toString()
+    {
+        return $this->handle;
+    }
 }
