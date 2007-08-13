@@ -184,3 +184,26 @@ $pdo->exec("
         ('lead-dev', 'pear.example.com', 'Example_Package', 'lead', 1),
         ('inactive-lead-dev', 'pear.example.com', 'Example_Package', 'lead', 0)
 ");
+
+$pdo->exec("
+    CREATE TABLE `handles` (
+        `channel` varchar(255) NOT NULL default '',
+        `handle` varchar(20) NOT NULL default '',
+        `name` varchar(255) NOT NULL default '',
+        `email` varchar(255) NOT NULL default '',
+        `uri` varchar(255) default NULL,
+        `description` text,
+        `wishlist` text,
+        `password` varchar(50) NOT NULL default '',
+        `admin` int(11) NOT NULL default '0',
+        PRIMARY KEY  (`channel`(100),`handle`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+");
+
+$pdo->exec("
+    INSERT INTO handles
+        (channel, handle, name, email, admin)
+    VALUE
+        ('pear.example.com', 'lead-dev', 'Lead Developer', 'email@example.com', 1),
+        ('pear.example.com', 'inactive-lead-dev', 'Inactive Lead Developer', 'alt_email@example.com', 0)
+");
