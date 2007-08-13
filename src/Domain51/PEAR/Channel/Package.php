@@ -2,6 +2,9 @@
 
 class Domain51_PEAR_Channel_Package extends Domain51_PEAR_Channel_AbstractDBModel
 {
+    private $_extensions = array();
+    private $_property_map = array();
+    
     public function __construct(Domain51_PEAR_Channel_Config $config, $criteria)
     {
         if (!is_array($criteria)) {
@@ -19,6 +22,11 @@ class Domain51_PEAR_Channel_Package extends Domain51_PEAR_Channel_AbstractDBMode
         $value = parent::__get($key);
         if (!is_null($value)) {
             return $value;
+        }
+        
+        // check extensions
+        if (isset($this->_property_map[$key])) {
+            return $this->_extensions[$this->_property_map[$key]]->$key;
         }
         
         switch ($key) {
@@ -62,6 +70,15 @@ class Domain51_PEAR_Channel_Package extends Domain51_PEAR_Channel_AbstractDBMode
     public function __toString()
     {
         return $this->package;
+    }
+    
+    public function registerExtension(Domain51_PEAR_Channel_Extension $extension)
+    {
+        $extension_name = get_class($extension);
+        $this->_extensions[$extension_name] = $extension;
+        foreach ($extension->declaredProperties() as $property) {
+            $this->_property_map[$property] = $extension_name;
+        }
     }
 }
 
