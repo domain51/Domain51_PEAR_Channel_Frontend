@@ -207,3 +207,25 @@ $pdo->exec("
         ('pear.example.com', 'lead-dev', 'Lead Developer', 'email@example.com', 1),
         ('pear.example.com', 'inactive-lead-dev', 'Inactive Lead Developer', 'alt_email@example.com', 0)
 ");
+
+
+// Add in package_extras table and some sample data
+$pdo->exec("
+    CREATE TABLE `package_extras` (
+        `channel` varchar(255) NOT NULL default '',
+        `package` varchar(80) NOT NULL default '',
+        `cvs_uri` varchar(255) NOT NULL default '',
+        `bugs_uri` varchar(255) NOT NULL default '',
+        `docs_uri` varchar(255) NOT NULL default '',
+        `qa_approval` int(1) NOT NULL default '0',
+        `unit_tested` int(1) NOT NULL default '0',
+        PRIMARY KEY  (`channel`(100),`package`)
+    ) ENGINE=MyISAM DEFAULT CHARSET=latin1
+");
+$pdo->exec("
+    INSERT INTO package_extras
+        (channel, package, cvs_uri, bugs_uri, docs_uri, qa_approval, unit_tested)
+    VALUES
+        ('pear.example.com', 'Example_Package', 'cvs://uri', 'bugs://uri', 'docs://uri', 1, 1),
+        ('pear.example.net', 'Example_Package', 'cvs://uri', 'bugs://uri', 'docs://uri', 0, 0)
+");
