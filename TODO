@@ -3,8 +3,8 @@
 * [DONE] Add ability to find package's maintainers
     * [DONE] Add maintainer model
     * [DONE] Add maintainer list object
-* Add handle model
-    * Tie handle model to maintainer
+* [DONE] Add handle model
+    * [DONE] Tie handle model to maintainer
 * Add D_P_C_Package::registerExtension(D_P_C_PackageExtension $extension) to provide a uniform
   method for handling extensions to the basic packages (possibly add to all base models).
   Extensions will specify properties that they answer to, and model will delegate retrieving
