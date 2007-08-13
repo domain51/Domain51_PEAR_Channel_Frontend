@@ -47,6 +47,15 @@ class Domain51_PEAR_Channel_Package extends Domain51_PEAR_Channel_AbstractDBMode
                 } catch (Domain51_PEAR_Channel_Package_NotFoundException $e) {
                     return false;
                 }
+            
+            case 'maintainers' :
+                return new Domain51_PEAR_Channel_MaintainerList(
+                    $this->_config,
+                    array(
+                        'channel' => (string)$this->_data['channel'],
+                        'package' => (string)$this->_data['package'],
+                    )
+                );
         }
     }
     
