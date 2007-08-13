@@ -17,7 +17,7 @@
          */
         public function declaredProperties();
     }
-* Add in Domain51_PEAR_Channel_Extension_Package_Crtx to handle the Crtx package_extras table.
+* [DONE] Add in Domain51_PEAR_Channel_Extension_Package_CrtxExtra to handle the Crtx package_extras table.
 * [???] Consider ability to auto discover extensions so they can just be installed without
   having to modify the code-base to register themselves.
 
