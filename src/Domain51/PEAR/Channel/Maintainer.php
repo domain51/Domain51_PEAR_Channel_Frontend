@@ -19,6 +19,12 @@ class Domain51_PEAR_Channel_Maintainer extends Domain51_PEAR_Channel_AbstractDBM
                     )
                 );
             
+            case 'handle' :
+                return new Domain51_PEAR_Channel_Handle(
+                    $this->_config,
+                    $this->_data['handle']
+                );
+            
             default :
                 return parent::__get($key);
         }
