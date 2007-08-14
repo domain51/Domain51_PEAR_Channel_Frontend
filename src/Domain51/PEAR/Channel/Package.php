@@ -80,6 +80,23 @@ class Domain51_PEAR_Channel_Package extends Domain51_PEAR_Channel_AbstractDBMode
             $this->_property_map[$property] = $extension_name;
         }
     }
+    
+    public function autoRegister($prefix = 'Domain51_PEAR_Channel_Extension_Package_', $base_path = null)
+    {
+        if (is_null($base_path)) {
+            $base_path = dirname(__FILE__) . '/Extension/Package';
+        }
+        $files = scandir($base_path);
+        foreach ($files as $file) {
+            if (substr($file, 0, 1) == '.') {
+                continue;
+            }
+            $extension = $prefix . substr($file, 0, -4);
+            if (!isset($this->_extensions[$extension])) {
+                $this->registerExtension(new $extension($this->_config, $this));
+            }
+        }
+    }
 }
 
 class Domain51_PEAR_Channel_Package_NotFoundException extends PEAR_Exception { }
