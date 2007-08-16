@@ -29,11 +29,11 @@ abstract class Domain51_PEAR_Channel_AbstractDBModel
         $final_criteria = array();
         foreach ($criteria as $column => $value) {
             $where[] = "{$column} = :{$column}";
-            $final_critera[":{$column}"] = $value;
+            $final_criteria[":{$column}"] = $value;
         }
         $query = "SELECT * FROM {$this->_table} WHERE " . implode(' AND ', $where);
         $statement = $pdo->prepare($query);
-        $statement->execute($final_critera);
+        $statement->execute($final_criteria);
         $this->_data = $statement->fetch(PDO::FETCH_ASSOC);
         if ($this->_data === false) {
             $error = $statement->errorInfo();
