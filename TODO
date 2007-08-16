@@ -24,6 +24,8 @@
 
 Phase Two
 ---------
+* Add a Domain51_PEAR_Channel_Frontend::_dbFactory() that turns the raw PEAR-style DSN
+  into a PDO style DSN adn creates the PDO object.
 * Refactor existing Domain51_PEAR_Channel_Frontend to utilize new models
 * Refactor existing Crtx_PEAR_Channel_Frontend displays to utilize new models and the
   Domain51_PEAR_Channel_Frontend MVC-style architecture.
