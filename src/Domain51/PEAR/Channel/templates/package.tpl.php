@@ -1,6 +1,6 @@
 <h2><?php echo $this->package; ?></h2>
 <ul id="package">
-    <?php if (count($this->releases) > 0) { ?>
+<?php if ($this->package->releases->count() > 0) { ?>
     <li>
         <a href="<?php echo $this->index; ?>?package=<?php echo $this->package; ?>&amp;downloads">
             Download
@@ -11,90 +11,84 @@
             RSS Feed
         </a>
     </li>
-    <?php } ?>
-    <?php echo $this->package_extras; ?>
+<?php } ?>
 </ul>
 
 <?php
-    if (isset($this->downloads)) {
-        echo $this->downloads;
+    if (isset($this->show_downloads) && $this->show_downloads) {
+        include "package/downloads.php";
     } else {
 ?>
     <h3>Summary</h3>
-    <p><?php echo nl2br($this->summary); ?></p>
+    <p><?php echo nl2br($this->package->summary); ?></p>
     
     <h3>License</h3>
     <p>
-    <?php if (isset($this->licenseuri)) { ?>
-        <a href="<?php echo $this->licenseuri; ?>"><?php echo $this->license; ?></a>
-    <?php } else { ?>
-        <?php echo $this->license; ?>
-    <?php } ?>
+<?php if (isset($this->package->licenseuri)) { ?>
+        <a href="<?php echo $this->package->licenseuri; ?>"><?php echo $this->package->license; ?></a>
+<?php } else { ?>
+        <?php echo $this->package->license; ?>
+<?php } ?>
     
     <h3>Current Release</h3>
     <ul>
-    <?php if (count($this->releases) == 0) { ?>
+<?php if ($this->package->releases->count() == 0) { ?>
         <li>No releases have been made yet</li>
-    <?php } else {
-        foreach ($this->releases as $state => $release) {
+<?php } else {
+        foreach ($this->package->releases as $release) {
             $release_uri = sprintf(
                 'http://%s/get/%s-%s.tgz',
-                $this->channel,
-                $this->package,
-                $release['version']
+                (string)$release->channel,
+                (string)$release->package,
+                (string)$release->version
             );
     ?>
     
         <li>
-            <a href="<?php echo $release_uri; ?>"><?php echo $release['version']; ?></a>
-            (<?php echo $state; ?>) was released on <?php echo $release['date']; ?>
+            <a href="<?php echo $release_uri; ?>"><?php echo $release->version; ?></a>
+            (<?php echo $release->state; ?>) was released on <?php echo $release->releasedate, "\n"; ?>
         </li>
-        <?php } ?>
-    <?php } ?>
+<?php } ?>
+<?php } ?>
     </ul>
     
-    <?php if ($this->summary != $this->description) { ?>
+<?php if ($this->package->summary != $this->package->description) { ?>
     <h3>Description</h3>
-    <p>
-        <?php echo nl2br($this->description); ?>
-    </p>
-    <?php } ?>
+    <p><?php echo nl2br($this->package->description); ?></p>
+<?php } ?>
     
-    <?php if (count($this->devs) > 0) { ?>
+<?php if ($this->package->maintainers->count() > 0) { ?>
     <h3>Maintainers</h3>
     <ul>
-        <?php
-            foreach ($this->devs as $dev) {
-                $dev = $dev->toArray();
-        ?>
+<?php foreach ($this->package->maintainers as $dev) { ?>
         <li>
-            <a href="<?php echo $this->index; ?>?user=<?php echo $dev['handle']; ?>">
-                <?php echo (!empty($dev['name'])) ? $dev['name'] : $dev['handle']; ?>
-            </a> (<?php echo ucfirst($dev['role']); ?>)
+            <a href="<?php echo $this->index; ?>?user=<?php echo $dev->handle; ?>">
+                <?php echo ($dev->handle->name != '' ? $dev->handle->name : $dev->handle), "\n"; ?>
+            </a> (<?php echo ucfirst($dev->role); ?>)
         </li>
-        <?php } ?>
+<?php } ?>
     </ul>
-    <?php } ?>
+<?php } ?>
     
-    <?php if(!is_null($this->parent)) { ?>
+<?php if($this->package->parentPackage !== false) { ?>
     <h3>Parent Package</h3>
     <p>
-        <a href="<?php echo $this->index; ?>?package=<?php echo $this->package; ?>">
-            <?php echo $this->parent; ?>
+        <a href="<?php echo $this->index; ?>?package=<?php echo $this->package->parentPackage; ?>">
+            <?php echo $this->package->parentPackage, "\n"; ?>
         </a>
     </p>
-    <?php } ?>
+<?php } ?>
     
-    <?php if (isset($this->subpackage)) { ?>
+<?php if ($this->package->has_children) { ?>
     <h3>Sub-Packages</h3>
     <ul>
-    <?php while($this->subpackage->fetch()) { ?>
+    <?php foreach ($this->package->childPackages as $child) { ?>
         <li>
-            <a href="<?php echo $this->index; ?>?package=<?php echo $this->subpackage->package; ?>">
-                <?php echo $this->subpackage->package; ?>
+            <a href="<?php echo $this->index; ?>?package=<?php echo $child; ?>">
+                <?php echo $child, "\n"; ?>
             </a>
         </li>
-    <?php } ?>
+<?php } ?>
     </ul>
-    <?php } ?>
+<?php } ?>
 <?php } ?>

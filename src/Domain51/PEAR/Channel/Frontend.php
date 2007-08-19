@@ -23,7 +23,7 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
         
         $this->_template_path = dirname(__FILE__) . '/templates';
         $this->_config_object = new Domain51_PEAR_Channel_Config(array(
-            'pdo' => new PDO($config['database']),
+            'pdo' => $this->_dbFactory($options['database']),
             'channel' => $channel,
         ));
     }
@@ -43,132 +43,30 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
      * @internal This method is currently all pseudo code.  There are still chunks
      *           of code to be implemented.
      * @return void
+     * 
+     * @todo refactor and test showPackage() to utilize new Model
      */
     public function showPackage()
     {
         try {
             $pkg = new Domain51_PEAR_Channel_Package($this->_config_object, $_GET['package']);
-            
-            // pseudo code
-            $pkg->registerExtras(new Domain51_PEAR_Channel_Package_Extras($pkg));
-            // end pc
+            $pkg->autoRegister();
             
             $view = $this->_newView('package');
             $view->index = $this->_config['index'];
             $view->package = $pkg;
-            $view->show_download = isset($_REQUEST['downloads']);
+            $view->show_downloads = isset($_REQUEST['downloads']);
             echo $view;
             return;
         } catch (Domain51_PEAR_Channel_Package_NotFoundException $e) {
-            // todo: use template
+            // @todo: use template
             echo "<strong>No package available</strong>";
             return;
         } catch (Domain51_PEAR_Channel_Package_UnrecoverableException $e) {
-            // todo: use template
+            // @todo: use template
             echo "<strong>Unrecoverable exception thrown, please contact channel administrator</strong>";
             return;
         }
-        
-        // old code to be removed
-        $subpkg = DB_DataObject::factory('packages');
-        $subpkg->channel = $this->_channel;
-        $subpkg->parent = $_GET['package'];
-
-        $has_sub = $subpkg->find(false);
-
-        $view = $this->_newView('package');
-        $view->index = $this->_config['index'];
-        $view->channel = $this->_config['channel'];
-        $view->package = $pkg['package'];
-        $view->package_extras = $this->_generatePackageExtras();
-        
-        
-        if (isset($_REQUEST['downloads'])) {
-            $view->downloads = $this->generateDownloads();
-        } else {
-            $view->description = $pkg['description'];
-            $view->summary = $pkg['summary'];
-            $view->license_uri = $pkg['licenseuri'];
-            $view->license = $pkg['license'];
-            
-            $view->releases = $this->_getPackageLatestReleases($pkg['package']);
-            $view->devs = $this->listPackageMaintainers($_GET['package']);
-            
-            if ($has_sub) {
-                $view->subpackage = $subpkg;
-            }
-        }
-        
-        echo $view;
-    }
-    
-    /**
-     * Temporary fix
-     */
-    public function generateDownloads()
-    {
-        ob_start();
-        $this->showPackageDownloads();
-        $buffer = ob_get_clean();
-        return $buffer . "</table>";
-    }
-    
-    protected function _generatePackageExtras()
-    {
-        $package = DB_DataObject::factory('package_extras');
-        $package->package = $_GET['package'];
-        if (!$package->find(true)) {
-            return;
-        }
-        
-        $view = $this->_newView('_package_extras');
-        $view->docs_uri = $package->docs_uri;
-        $view->bugs_uri = $package->bugs_uri;
-        $view->source_control_uri = $package->cvs_uri;
-        
-        return (string)$view;
-    }
-    
-    
-    /**
-     * Duplicates {@link Crtx_PEAR_Channel_Frontend::getPackageLatestReleases()} since it's scope
-     * is private.
-     */
-    protected function _getPackageLatestReleases($pkg)
-    {
-        $release = array();
-        $package = DB_DataObject::factory('releases');
-        $escaped_package = $package->escape($pkg);
-        
-        $query = "
-            SELECT
-                state,
-                version,
-                DATE_FORMAT(releasedate, '%M %D %Y') AS date
-            FROM
-                releases
-                INNER JOIN (
-                    SELECT
-                        version
-                    FROM
-                        releases
-                    WHERE
-                        package = '{$escaped_package}'
-                    ORDER BY
-                        releasedate
-                    LIMIT 1
-                ) AS derived USING(version)
-            WHERE
-                package = '{$escaped_package}'
-        ";
-        $package->query($query);
-        
-        
-        $latest_releases = array();
-        while ($package->fetch()) {
-            $latest_releases[$package->state] = $package->toArray();
-        }
-        return $latest_releases;
     }
     
     protected function _newView($template)
@@ -178,5 +76,21 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
         } else {
             return new Domain51_Template("{$this->_template_path}/{$template}.tpl.php");
         }
+    }
+    
+    /**
+     * @todo refactor into separate, tested package
+     * @todo allow unix_socket connections?
+     */
+    private function _dbFactory($dsn)
+    {
+        $config = DB::parseDSN($dsn);
+        $real_dsn = "{$config['phptype']}:host={$config['hostspec']};";
+        if ($config['port'] !== false) {
+            $real_dsn .= "port={$config['port']};";
+        }
+        $real_dsn .= "dbname={$config['database']}";
+        
+        return new PDO($real_dsn, $config['username'], $config['password']);
     }
 }

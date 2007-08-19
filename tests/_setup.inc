@@ -64,7 +64,7 @@ $pdo->exec("
             'LGPL',
             'A useful summary',
             'A more full description',
-            NOW() - (60 * 60 * 24 * 7 * 4),
+            DATE_SUB(NOW(), INTERVAL 4 WEEK),
             'Initial release',
             '/path/to/release/Example_Package-0.1alpha.tgz',
             '',
@@ -80,7 +80,7 @@ $pdo->exec("
             'LGPL',
             'A useful summary',
             'A more full description',
-            NOW() - (60 * 60 * 24 * 7 * 4),
+            DATE_SUB(NOW(), INTERVAL 3 WEEK),
             'Initial release',
             '/path/to/release/Example_Package-0.2beta.tgz',
             '',
@@ -96,7 +96,7 @@ $pdo->exec("
             'LGPL',
             'A useful summary',
             'A more full description',
-            NOW() - (60 * 60 * 24 * 7 * 4),
+            DATE_SUB(NOW(), INTERVAL 2 WEEK),
             'Third release, second alpha',
             '/path/to/release/Example_Package-0.2.1beta.tgz',
             '',
@@ -150,6 +150,15 @@ $pdo->exec("
             'http://uri',
             'A useful summary of a conflicting package name on a different channel',
             'A more full description of said package',
+            0
+        ),
+        (
+            'pear.example.com',
+            'Example_Package_WithNoReleases',
+            'LGPL',
+            'http://lgpl-uri',
+            'This package has no releases',
+            'Seriously, this package has not one release.',
             0
         )
 ");
@@ -227,5 +236,6 @@ $pdo->exec("
         (channel, package, cvs_uri, bugs_uri, docs_uri, qa_approval, unit_tested)
     VALUES
         ('pear.example.com', 'Example_Package', 'cvs://uri', 'bugs://uri', 'docs://uri', 1, 1),
-        ('pear.example.net', 'Example_Package', 'cvs://uri', 'bugs://uri', 'docs://uri', 0, 0)
+        ('pear.example.net', 'Example_Package', 'cvs://uri', 'bugs://uri', 'docs://uri', 0, 0),
+        ('pear.example.com', 'Example_Package_WithNoReleases', 'cvs://uri', 'bugs://uri', 'docs://uri', 1, 1)
 ");
