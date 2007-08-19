@@ -20,7 +20,8 @@
 * [DONE] Add in Domain51_PEAR_Channel_Extension_Package_CrtxExtra to handle the Crtx package_extras table.
 * [DONE] Consider ability to auto discover extensions so they can just be installed without
   having to modify the code-base to register themselves.
-
+* Add Dependency object to handle dependencies
+    * Add Dependency::__toString() to handle displaying plain-text version of a given dependency
 
 Phase Two
 ---------
