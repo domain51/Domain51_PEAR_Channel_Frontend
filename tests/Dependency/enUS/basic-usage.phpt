@@ -11,8 +11,8 @@ no valid reason for creating pseudo objects of the column.
 <?php
 // BEGIN REMOVE
 set_include_path(
-    dirname(__FILE__) . '/..' . PATH_SEPARATOR .
-    dirname(__FILE__) . '/../../src' . PATH_SEPARATOR .
+    dirname(__FILE__) . '/../..' . PATH_SEPARATOR .
+    dirname(__FILE__) . '/../../../src' . PATH_SEPARATOR .
     get_include_path()
 );
 // END REMOVE
@@ -28,7 +28,7 @@ $data = array(
     'optional' => 'no',
 );
 
-$dep = new Domain51_PEAR_Channel_Dependency($config, $data);
+$dep = new Domain51_PEAR_Channel_Dependency_enUS($config, $data);
 assert('(string)$dep == "Package: Some_Package"');
 
 // basic PEAR greater than
@@ -40,7 +40,7 @@ $data = array(
     'version' => '1.6.0',
     'optional' => 'no',
 );
-$dep = new Domain51_PEAR_Channel_Dependency($config, $data);
+$dep = new Domain51_PEAR_Channel_Dependency_enUS($config, $data);
 assert('(string)$dep == "Package: PEAR 1.6.0 or newer from pear.php.net"');
 
 
@@ -51,7 +51,7 @@ $data = array(
     'rel' => 'has',
     'optional' => 'no',
 );
-$dep = new Domain51_PEAR_Channel_Dependency($config, $data);
+$dep = new Domain51_PEAR_Channel_Dependency_enUS($config, $data);
 assert('(string)$dep == "PHP Extension: memcache"');
 
 
