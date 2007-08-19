@@ -7,6 +7,9 @@ class Domain51_PEAR_Channel_Config
     public function __construct(array $data)
     {
         $this->_data = $data;
+        if (!isset($this->_data['locale'])) {
+            $this->_data['locale'] = 'enUS';
+        }
     }
     
     public function __get($key)
