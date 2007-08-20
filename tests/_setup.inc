@@ -5,6 +5,7 @@ require 'Domain51/Loader.php';
 // BEGIN REMOVE
 set_include_path(
     dirname(__FILE__) . '/../src' . PATH_SEPARATOR .
+    dirname(__FILE__) . '/../../../Domain51_PEAR_Channel/trunk/src' . PATH_SEPARATOR .
     get_included_files()
 );
 // END REMOVE
