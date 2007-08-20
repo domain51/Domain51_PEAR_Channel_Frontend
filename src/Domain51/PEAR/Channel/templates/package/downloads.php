@@ -32,7 +32,7 @@
                 <dd><?php echo $release->state; ?></dd>
                 
                 <dt>Changelog</dt>
-                <dd><?php echo $release->changelog; ?></dd>
+                <dd><?php echo $release->releasenotes; ?></dd>
                 
                 <dt>Dependencies</dt>
                 <dd>
