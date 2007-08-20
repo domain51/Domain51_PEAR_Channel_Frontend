@@ -43,8 +43,6 @@ class Domain51_PEAR_Channel_Frontend extends Crtx_PEAR_Channel_Frontend
      * @internal This method is currently all pseudo code.  There are still chunks
      *           of code to be implemented.
      * @return void
-     * 
-     * @todo refactor and test showPackage() to utilize new Model
      */
     public function showPackage()
     {
