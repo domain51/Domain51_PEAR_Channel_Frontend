@@ -23,7 +23,7 @@
 * [DONE] Add Dependency object to handle dependencies
     * [DONE] Add Dependency::__toString() to handle displaying plain-text version of a given dependency
 * [DONE] Add default "locale" to config object of enUS
-* Make release capable of using locale to determine what object to use for Dependency object
+* [DONE] Make release capable of using locale to determine what object to use for Dependency object
 
 Phase Two
 ---------
