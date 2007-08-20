@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Domain51_PEAR_Channel_Frontend" basedir="." default="make">
+    <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2" />
+    
+    <property name="version" value="0.1" />
+    <property name="package_name" value="Domain51_PEAR_Channel_Frontend" />
+    
+    <target name="clean">
+        <delete dir="./build/package" />
+        <delete dir="./build/export" />
+        <delete file="./${package_name}-${version}.tgz" />
+        
+        <mkdir dir="./build/package" />
+    </target>
+        
+    <target name="export" depends="clean">
+        <echo msg="Exporting SVN files" />
+        <exec command="svn export ./src ./build/export" />
+        
+        <copy todir="./build/package">
+            <filterchain>
+                <replacetokens begintoken="@@" endtoken="@@">
+                    <token key="VERSION" value="${version}" />
+                </replacetokens>
+            </filterchain>
+            <fileset dir="./build/export">
+                <include name="Domain51*/**" />
+            </fileset>
+        </copy>
+    </target>
+    
+    <target name="build" depends="export">
+        <d51pearpkg2 dir="./build/package" baseinstalldir="/">
+            <name>${package_name}</name>
+            <summary>A rewrite of Crtx_PEAR_Channel_Frontend</summary>
+            <channel>pear.domain51.com</channel>
+            <description indentions_to_remove="16">
+                <!--        Don't exceed this width         -->
+                This package provides a rewrite of Davey
+                Shafik's excellent Crtx_PEAR_Channel_Frontend
+                package.  This package goes beyond Davey's
+                implementation by offerring templates to
+                control the output and abstracting the
+                database interaction into another package,
+                Domain51_PEAR_Channel.
+            </description>
+            
+            <lead user="tswicegood" name="Travis Swicegood" email="developer@domain51.com" />
+            <license>LGPL</license>
+            
+            <version release="${version}" api="1.0" />
+            <stability release="alpha" api="alpha" />
+            
+            <changelog version="0.1" date="@@DATE@@">
+                This is the initial alpha release of this package
+            </changelog>
+            
+            <dependencies>
+               <package name="Domain51_PEAR_Channel"
+                        channel="pear.domain51.com"
+                        minimum_version="0.1" />
+                <package name="Crtx_PEAR_Channel_Frontend"
+                         channel="pear.crtx.org"
+                         recommended_version="0.3.1" />
+            </dependencies>
+        </d51pearpkg2>
+    </target>
+    
+    <target name="make" depends="build">
+        <echo msg="Creating PEAR archive file for ${package_name}" />
+        <mkdir dir="./build/package/${package_name}-${version}" />
+        <copy todir="./build/package/${package_name}-${version}">
+            <fileset dir="./build/package">
+                <include name="Domain51/**/**" />
+            </fileset>
+        </copy>
+        <delete dir="./build/package/Domain51" />
+        <tar compression="gzip" destfile="${package_name}-${version}.tgz" basedir="./build/package" />
+    </target>
+    
+    <target name="docs" depends="export">
+        <echo msg="Creating documentation" />
+        <phpdoc title="${package_name} Docs" 
+            destdir="./apidocs"
+            sourcecode="./build"
+            output="HTML:frames:DOM/earthli"
+        >
+            <fileset dir="./build/export">
+                <include name="**" />
+            </fileset>
+        </phpdoc>
+    </target>
+</project>
