@@ -11,7 +11,28 @@
             RSS Feed
         </a>
     </li>
-<?php } ?>
+<?php if ($this->package->docs_uri != '') { ?>
+    <li>
+        <a href="<?php echo $this->package->docs_uri; ?>">
+            Documentation
+        </a>
+    </li>
+<?php }
+    if ($this->package->bugs_uri != '') { ?>
+    <li>
+        <a href="<?php echo $this->package->bugs_uri; ?>">
+            Bugs
+        </a>
+    </li>
+<?php }
+    if ($this->package->cvs_uri != '') { ?>
+    <li>
+        <a href="<?php echo $this->package->cvs_uri; ?>">
+            Source Control
+        </a>
+    </li>
+<?php }
+} ?>
 </ul>
 
 <?php
