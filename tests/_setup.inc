@@ -2,6 +2,13 @@
 
 require 'Domain51/Loader.php';
 
+// BEGIN REMOVE
+set_include_path(
+    dirname(__FILE__) . '/../src' . PATH_SEPARATOR .
+    get_included_files()
+);
+// END REMOVE
+
 $database_name = 'test_pear_channel';
 $pdo = new PDO('mysql://root:@', 'root', '');
 $config = new Domain51_PEAR_Channel_Config(array(
@@ -101,6 +108,45 @@ $pdo->exec("
             '/path/to/release/Example_Package-0.2.1beta.tgz',
             '',
             ''
+        ),
+        (
+            4,
+            'pear.example.com',
+            'Example_Package_WithDependencies',
+            '1.2.3',
+            'stable',
+            'lead-dev',
+            'LGPL',
+            'Contains dependencies',
+            'A package with one release that has dependencies',
+            DATE_SUB(NOW(), INTERVAL 1 WEEK),
+            'N/A',
+            '/path/to/release/Example_Package_WithDependencies-1.2.3.tgz',
+            '',
+            '" .
+                serialize(array(
+                    array(
+                        'type' => 'php',
+                        'rel' => 'ge',
+                        'version' => '5.2.3',
+                        'optional' => 'no',
+                    ),
+                    array(
+                        'type' => 'pkg',
+                        'channel' => 'pear.php.net',
+                        'name' => 'PEAR',
+                        'rel' => 'ge',
+                        'version' => '1.6.0',
+                        'optional' => 'no',
+                    ),
+                    array(
+                        'type' => 'pkg',
+                        'channel' => 'pear.example.com',
+                        'name' => 'Example_Package',
+                        'rel' => 'has',
+                        'optional' => 'no',
+                    )
+                )) . "'
         )
 ");
 
@@ -159,6 +205,15 @@ $pdo->exec("
             'http://lgpl-uri',
             'This package has no releases',
             'Seriously, this package has not one release.',
+            0
+        ),
+        (
+            'pear.example.com',
+            'Example_Package_WithDependencies',
+            'LGPL',
+            'http://lgpl-uri',
+            'This package has dependencies',
+            '',
             0
         )
 ");
