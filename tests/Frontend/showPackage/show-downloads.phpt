@@ -26,6 +26,7 @@ $buffer = ob_get_clean();
 
 assert('!preg_match("/.*PHP (Notice|Error|Warning).*/", $buffer)');
 assert('preg_match("/<h3>Downloads<\/h3>/", $buffer)');
+// @todo add more tests 
 
 ?>
 ===DONE===
