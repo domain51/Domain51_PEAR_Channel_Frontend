@@ -5,6 +5,7 @@
 
 <dl>
 <?php
+    $this->package->releases->reverse();
     foreach ($this->package->releases as $release) {
 ?>
     <di>
