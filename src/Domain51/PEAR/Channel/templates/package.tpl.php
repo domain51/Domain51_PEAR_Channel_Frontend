@@ -56,6 +56,8 @@
 <?php if ($this->package->releases->count() == 0) { ?>
         <li>No releases have been made yet</li>
 <?php } else {
+        $this->package->releases->filter('latest');
+        $this->package->releases->reverse();
         foreach ($this->package->releases as $release) {
             $release_uri = sprintf(
                 'http://%s/get/%s-%s.tgz',
