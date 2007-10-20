@@ -2,7 +2,7 @@
 <project name="Domain51_PEAR_Channel_Frontend" basedir="." default="make">
     <taskdef classname="phing.tasks.ext.d51PearPkg2Task" name="d51pearpkg2" />
     
-    <property name="version" value="0.1.1" />
+    <property name="version" value="0.1.2" />
     <property name="package_name" value="Domain51_PEAR_Channel_Frontend" />
     
     <target name="clean">
@@ -51,6 +51,11 @@
             <version release="${version}" api="1.0" />
             <stability release="alpha" api="alpha" />
             
+            <changelog version="0.1.2" date="2007-10-20">
+                <!--        Don't exceed this width         -->
+                Add dependency to Domain51_Template
+            </changelog>
+            
             <changelog version="0.1.1" date="2007-08-22">
                 <!--        Don't exceed this width         -->
                 * Reverse order of downloads so most recent is
@@ -72,6 +77,9 @@
                 <package name="Crtx_PEAR_Channel_Frontend"
                          channel="pear.crtx.org"
                          recommended_version="0.3.1" />
+                <package name="Domain51_Template"
+                         channel="pear.domain51.com"
+                         minimum_version="0.1" />
             </dependencies>
         </d51pearpkg2>
     </target>
